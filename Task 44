@@ -1,0 +1,29 @@
+"""В ячейке ниже представлен код генерирующий DataFrame, которая 
+состоит всего из 1 столбца. Ваша задача перевести его в one hot 
+вид. Сможете ли вы это сделать без get_dummies?
+
+import random
+lst = ['robot'] * 10
+lst += ['human'] * 10
+random.shuffle(lst)
+data = pd.DataFrame({'whoAmI':lst})
+data.head()"""
+
+data = data.reset_index()  # Сбросим индексы
+
+# Преобразуем данные в one-hot вид
+melted_data = data.melt(id_vars='index')
+one_hot_data = pd.pivot_table(melted_data, values='value', index='index', columns='variable', aggfunc='first')
+
+one_hot_data = one_hot_data.fillna(0).astype(int)  
+# Заполняем пропущенные значения нулями и приводим тип к целочисленному
+
+one_hot_data.columns = [f'{col}_onehot' for col in one_hot_data.columns]  
+# Добавляем приставку "_onehot" к названиям столбцов
+```
+
+"""В итоге, получим DataFrame `one_hot_data`, в котором каждое 
+значение столбца 'whoAmI' будет представлено в виде отдельных 
+столбцов с приставкой "_onehot". Для каждого индекса DataFrame 
+`one_hot_data` будет равен 1 в только одном из этих столбцов, 
+в зависимости от значения исходного столбца 'whoAmI'."""
